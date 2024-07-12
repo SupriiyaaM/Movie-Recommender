@@ -97,14 +97,19 @@ import pandas as pd
 # Function to fetch poster from TMDB API
 def fetch_poster(movie_id):
     url = f"https://api.themoviedb.org/3/movie/{movie_id}?api_key=f3cd847b635146c101bfc6fca8cf753b&language=en-US"
-    response = requests.get(url)
-    data = response.json()
-    poster_path = data.get('poster_path', None)
-    if poster_path:
-        full_path = f"https://image.tmdb.org/t/p/w500/{poster_path}"
-        return full_path
-    else:
-        return None
+    try:
+        response = requests.get(url)
+        data = response.json()
+        poster_path = data.get('poster_path', None)
+        if poster_path:
+            full_path = f"https://image.tmdb.org/t/p/w500/{poster_path}"
+            return full_path
+        else:
+            return None
+    except requests.exceptions.RequestException as e:
+        st.error("ERROR : Unable To Fetch Data. Connect to VPN to get valid results or try again later.")
+        st.stop()
+
     
 # Function to recommend movies based on selected movie
 def recommend(movie):
